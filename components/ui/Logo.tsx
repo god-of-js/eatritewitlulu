@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 type LogoProps = {
   className?: string;
   tone?: "light" | "dark";
@@ -8,8 +10,8 @@ export function Logo({ className = "", tone = "light" }: LogoProps) {
     tone === "light" ? "text-white" : "text-ink";
 
   return (
-    <a
-      href="#top"
+    <Link
+      href="/"
       className={`inline-flex items-center gap-2.5 ${colors} ${className}`}
       aria-label="EatriteWithLulu home"
     >
@@ -37,6 +39,6 @@ export function Logo({ className = "", tone = "light" }: LogoProps) {
         Eatrite
         <span className="font-display italic font-normal">WithLulu</span>
       </span>
-    </a>
+    </Link>
   );
 }

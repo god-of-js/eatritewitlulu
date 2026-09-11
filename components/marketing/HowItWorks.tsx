@@ -8,13 +8,13 @@ const steps = [
   },
   {
     number: "02",
-    title: "Talk to Us",
-    copy: "Click the button and continue your order directly on WhatsApp.",
+    title: "Choose Delivery",
+    copy: "Pick how often you want meals delivered and whether you are on the Island or Mainland.",
   },
   {
     number: "03",
-    title: "Get Your Meals",
-    copy: "We'll help you complete your order and arrange your meals.",
+    title: "Pay & Get Your Meals",
+    copy: "Review your total, pay securely, and we arrange your deliveries.",
   },
 ];
 
@@ -27,7 +27,7 @@ export function HowItWorks() {
             How it works
           </p>
           <h2 className="mt-3 font-display text-4xl leading-tight font-medium tracking-tight sm:text-5xl">
-            Three steps. Then WhatsApp.
+            Choose a plan. Pay online. Eat well.
           </h2>
         </div>
 

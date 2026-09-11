@@ -1,7 +1,5 @@
 import Image from "next/image";
-import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
-import { WhatsAppLink } from "@/components/ui/WhatsAppLink";
-import { getGeneralWhatsAppUrl } from "@/lib/whatsapp";
+import { ButtonLink } from "@/components/ui/ButtonLink";
 
 export function FinalCTA() {
   return (
@@ -21,20 +19,15 @@ export function FinalCTA() {
 
       <div className="relative z-10 mx-auto max-w-2xl px-5 sm:px-8">
         <h2 className="font-display text-4xl leading-tight font-medium tracking-tight sm:text-5xl md:text-6xl">
-          Your Next Healthy Meal Is Just One Message Away.
+          Your Next Healthy Meal Is One Plan Away.
         </h2>
         <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-white/75">
-          Stop stressing about what to eat. Choose your plan and let
-          EatriteWithLulu make healthy eating easier.
+          Stop stressing about what to eat. Choose your plan, set delivery and
+          subscribe directly on EatriteWithLulu.
         </p>
-        <WhatsAppLink
-          href={getGeneralWhatsAppUrl()}
-          variant="whatsapp"
-          className="mt-8 px-8"
-        >
-          <WhatsAppIcon />
-          Get Started on WhatsApp
-        </WhatsAppLink>
+        <ButtonLink href="/#plans" variant="primary" className="mt-8 px-8">
+          Subscribe to a plan
+        </ButtonLink>
       </div>
     </section>
   );

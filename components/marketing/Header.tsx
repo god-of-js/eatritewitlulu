@@ -2,28 +2,33 @@
 
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/ui/Logo";
-import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
-import { WhatsAppLink } from "@/components/ui/WhatsAppLink";
-import { getGeneralWhatsAppUrl } from "@/lib/whatsapp";
+import { buttonClass } from "@/components/ui/ButtonLink";
+import { onAuthStateChanged } from "firebase/auth";
+import { getFirebaseAuth } from "@/lib/firebase/client";
 
 const nav = [
-  { href: "#problem", label: "The problem" },
-  { href: "#plans", label: "Plans" },
-  { href: "#who", label: "Who it's for" },
-  { href: "#how-it-works", label: "How it works" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About Us" },
+  { href: "/#plans", label: "Meal Plans" },
 ];
 
-export function Header() {
-  const [scrolled, setScrolled] = useState(false);
+type HeaderProps = {
+  variant?: "overlay" | "solid";
+};
+
+export function Header({ variant = "overlay" }: HeaderProps) {
+  const [scrolled, setScrolled] = useState(variant === "solid");
   const [open, setOpen] = useState(false);
-  const whatsappHref = getGeneralWhatsAppUrl();
+  const [accountHref, setAccountHref] = useState("/login");
+  const [accountLabel, setAccountLabel] = useState("Login");
 
   useEffect(() => {
+    if (variant === "solid") return;
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [variant]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -32,10 +37,25 @@ export function Header() {
     };
   }, [open]);
 
+  useEffect(() => {
+    const auth = getFirebaseAuth();
+    return onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAccountHref("/account");
+        setAccountLabel("Account");
+      } else {
+        setAccountHref("/login");
+        setAccountLabel("Login");
+      }
+    });
+  }, []);
+
+  const solid = variant === "solid" || scrolled || open;
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled || open
+        solid
           ? "border-b border-white/10 bg-ink/90 backdrop-blur-md"
           : "bg-transparent"
       }`}
@@ -48,7 +68,7 @@ export function Header() {
             <a
               key={item.href}
               href={item.href}
-              className="text-sm text-white/75 transition-colors hover:text-white"
+              className="cursor-pointer text-sm text-white/75 transition-colors hover:text-white"
             >
               {item.label}
             </a>
@@ -56,15 +76,14 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <WhatsAppLink href={whatsappHref} variant="primary" className="min-h-11 px-5">
-            <WhatsAppIcon className="h-4 w-4 text-[#25D366]" />
-            Chat With Us
-          </WhatsAppLink>
+          <a href={accountHref} className={buttonClass("primary", "min-h-11 px-5")}>
+            {accountLabel}
+          </a>
         </div>
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white lg:hidden"
+          className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
           onClick={() => setOpen((value) => !value)}
@@ -107,14 +126,13 @@ export function Header() {
               </a>
             ))}
           </nav>
-          <WhatsAppLink
-            href={whatsappHref}
-            variant="whatsapp"
-            className="mt-4 w-full"
+          <a
+            href={accountHref}
+            className={buttonClass("primary", "mt-4 w-full")}
+            onClick={() => setOpen(false)}
           >
-            <WhatsAppIcon />
-            Chat With Us
-          </WhatsAppLink>
+            {accountLabel}
+          </a>
         </div>
       ) : null}
     </header>

@@ -1,12 +1,11 @@
 import { Logo } from "@/components/ui/Logo";
-import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { siteConfig } from "@/lib/config";
-import { getGeneralWhatsAppUrl } from "@/lib/whatsapp";
 
 const links = [
-  { href: "#plans", label: "Meal plans" },
-  { href: "#how-it-works", label: "How it works" },
-  { href: "#who", label: "Who it's for" },
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About Us" },
+  { href: "/#plans", label: "Meal plans" },
+  { href: "/login", label: "Login" },
 ];
 
 export function Footer() {
@@ -16,8 +15,8 @@ export function Footer() {
         <div className="max-w-sm">
           <Logo />
           <p className="mt-4 text-sm leading-relaxed text-white/55">
-            Healthy, convenient meals planned around your goals. Message us to
-            get started.
+            Healthy, convenient meals planned around your goals. Choose a plan
+            and subscribe directly on the website.
           </p>
         </div>
 
@@ -41,16 +40,13 @@ export function Footer() {
 
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/40">
-            Order
+            Account
           </p>
           <a
-            href={getGeneralWhatsAppUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/account"
             className="mt-4 inline-flex items-center gap-2 text-sm text-white/80 hover:text-white"
           >
-            <WhatsAppIcon className="h-4 w-4 text-[#25D366]" />
-            Chat on WhatsApp
+            Customer dashboard
           </a>
         </div>
       </div>

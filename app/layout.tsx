@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
+import { AuthSync } from "@/components/auth/AuthSync";
 import { siteConfig } from "@/lib/config";
 import "./globals.css";
 
@@ -87,6 +88,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to content
         </a>
+        <AuthSync />
         {children}
       </body>
     </html>

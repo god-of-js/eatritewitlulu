@@ -1,17 +1,25 @@
 # EatriteWithLulu
 
-One-page marketing site. Visitors browse meal plans and continue the order on WhatsApp.
+Marketing site plus authenticated meal-plan checkout with Paystack, Firebase Auth, and a customer dashboard.
 
 ## Setup
 
 ```bash
 npm install
+```
+
+1. Copy `.env.example` to `.env.local` and add Firebase + Paystack keys.
+2. In Firebase, enable **Email/Password** under Authentication.
+3. Create a **Firestore** database, then publish the rules in `firebase/firestore.rules`.
+4. Keep `localhost` in Authentication → Settings → Authorized domains.
+5. For `/admin`, publish `firebase/firestore.rules`, log in at `/admin/login`, then add more admins from `/admin/admins`.
+6. Start the app:
+
+```bash
 npm run dev
 ```
 
-1. WhatsApp is set to `08033298274` in `lib/config.ts` and `.env.local`.
-2. Prices live in `lib/plans.ts`.
-3. Add real testimonials to `lib/testimonials.ts` when you have them.
+Meal-plan prices live in `lib/plans.ts`. About/FAQ copy lives in `lib/about.ts` and `lib/faq.ts`.
 
 ## Scripts
 

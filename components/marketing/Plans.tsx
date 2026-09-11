@@ -2,15 +2,13 @@
 
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
-import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
-import { WhatsAppLink } from "@/components/ui/WhatsAppLink";
+import { ButtonLink } from "@/components/ui/ButtonLink";
 import {
   formatPlanPrice,
   getPlansByCategory,
   planCategories,
   type PlanCategoryId,
 } from "@/lib/plans";
-import { getPlanWhatsAppUrl } from "@/lib/whatsapp";
 
 export function Plans() {
   const [categoryId, setCategoryId] = useState<PlanCategoryId>("standard");
@@ -26,8 +24,8 @@ export function Plans() {
             Choose the Plan That Works for You
           </h2>
           <p className="mt-4 text-base leading-relaxed text-ink/65">
-            Start with Standard or High-Protein, then pick the weekly rhythm
-            that fits your life. Every plan continues on WhatsApp.
+            Start with Standard or High-Protein, then subscribe for a week or a
+            month and pay directly on the website.
           </p>
         </div>
 
@@ -46,7 +44,7 @@ export function Plans() {
                 aria-selected={selected}
                 aria-controls={`plans-${item.id}`}
                 onClick={() => setCategoryId(item.id)}
-                className={`min-h-11 flex-1 rounded-full px-4 text-sm font-semibold transition-colors ${
+                className={`min-h-11 flex-1 cursor-pointer rounded-full px-4 text-sm font-semibold transition-colors ${
                   selected
                     ? "bg-ink text-cream"
                     : "text-ink/65 hover:text-ink"
@@ -114,14 +112,13 @@ export function Plans() {
                       </li>
                     </ul>
 
-                    <WhatsAppLink
-                      href={getPlanWhatsAppUrl(plan)}
-                      variant="whatsapp"
+                    <ButtonLink
+                      href={`/subscribe/${plan.id}`}
+                      variant="solid"
                       className="mt-6 w-full"
                     >
-                      <WhatsAppIcon />
-                      {plan.ctaLabel}
-                    </WhatsAppLink>
+                      Subscribe
+                    </ButtonLink>
                   </article>
                 ))}
               </div>

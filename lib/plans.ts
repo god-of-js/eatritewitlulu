@@ -253,6 +253,10 @@ export const mealPlans: MealPlan[] = [
 
 export const activePlans = mealPlans.filter((plan) => plan.active);
 
+export function getPlanById(id: string) {
+  return mealPlans.find((plan) => plan.id === id);
+}
+
 export function getPlansByCategory(category: PlanCategoryId) {
   return activePlans.filter((plan) => plan.category === category);
 }
