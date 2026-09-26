@@ -46,6 +46,22 @@ function fromMeal(doc: FirestoreDocument): Meal {
   };
 }
 
+export async function getMeal(id: string) {
+  const response = await fetch(
+    `${firestoreRoot()}/meals/${encodeURIComponent(id)}?key=${getFirebaseApiKey()}`,
+    { cache: "no-store" },
+  );
+  if (response.status === 404) return null;
+  const payload = (await response.json().catch(() => null)) as FirestoreDocument | {
+    error?: { message?: string };
+  } | null;
+  if (!response.ok || !payload || !("name" in payload) || !payload.name) {
+    return null;
+  }
+  const meal = fromMeal(payload);
+  return meal.name ? meal : null;
+}
+
 export async function listMeals() {
   const response = await fetch(
     `${firestoreRoot()}/meals?pageSize=100&key=${getFirebaseApiKey()}`,

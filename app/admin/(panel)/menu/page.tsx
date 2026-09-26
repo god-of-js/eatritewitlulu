@@ -1,3 +1,4 @@
+import { MealActions } from "@/components/admin/MealActions";
 import { MealForm } from "@/components/admin/MealForm";
 import { MealCard } from "@/components/menu/MealCard";
 import { listMeals } from "@/lib/firebase/meals";
@@ -32,6 +33,7 @@ export default async function AdminMenuPage() {
           {meals.map((meal) => (
             <li key={meal.id}>
               <MealCard meal={meal} />
+              <MealActions mealId={meal.id} />
             </li>
           ))}
         </ul>
