@@ -12,13 +12,20 @@ export default async function ProfilePage() {
     full_name: data?.full_name || user.name || "",
     phone: data?.phone ?? null,
     email: data?.email || user.email,
+    delivery_address: data?.delivery_address ?? null,
+    delivery_location:
+      data?.delivery_location === "mainland" || data?.delivery_location === "island"
+        ? data.delivery_location
+        : null,
     deleted_at: data?.deleted_at ?? null,
   };
 
   return (
     <main>
       <h1 className="font-display text-3xl font-medium tracking-tight">Profile</h1>
-      <p className="mt-2 text-sm text-ink/60">Your basic account details.</p>
+      <p className="mt-2 text-sm text-ink/60">
+        Your account and delivery details. Checkout will use these next time.
+      </p>
       <ProfileForm profile={profile} />
     </main>
   );

@@ -20,6 +20,8 @@ export async function requireUserAndProfile(next = "/account") {
         full_name: user.name ?? "",
         phone: null,
         email: user.email,
+        delivery_address: null,
+        delivery_location: null,
         deleted_at: null,
       },
       true,

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import { AuthSync } from "@/components/auth/AuthSync";
+import { CartBar } from "@/components/cart/CartBar";
+import { CartProvider } from "@/components/cart/CartProvider";
 import { siteConfig } from "@/lib/config";
 import "./globals.css";
 
@@ -89,7 +91,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <AuthSync />
-        {children}
+        <CartProvider>
+          {children}
+          <CartBar />
+        </CartProvider>
       </body>
     </html>
   );

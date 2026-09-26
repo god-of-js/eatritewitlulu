@@ -1,4 +1,5 @@
 import { getFirebaseProjectId } from "@/lib/firebase/config";
+import type { DeliveryLocation } from "@/lib/pricing";
 import type { Profile, Subscription, Transaction } from "@/lib/types";
 
 type FirestoreValue =
@@ -87,6 +88,45 @@ export async function getProfile(token: string, userId: string) {
   const payload = await firestoreFetch(token, `/users/${userId}`);
   if (!payload?.name) return null;
   return fromDocument<Profile>(payload as FirestoreDocument);
+}
+
+export async function patchProfile(
+  token: string,
+  userId: string,
+  data: Partial<Omit<Profile, "id">>,
+) {
+  const keys = Object.keys(data);
+  if (!keys.length) return getProfile(token, userId);
+
+  const mask = keys
+    .map((key) => `updateMask.fieldPaths=${encodeURIComponent(key)}`)
+    .join("&");
+  const payload = await firestoreFetch(token, `/users/${userId}?${mask}`, {
+    method: "PATCH",
+    body: JSON.stringify({ fields: toFields(data) }),
+  });
+  if (!payload?.name) {
+    throw new Error("Could not save your profile.");
+  }
+  return fromDocument<Profile>(payload as FirestoreDocument);
+}
+
+export async function saveDeliveryDetails(
+  token: string,
+  userId: string,
+  details: {
+    full_name?: string;
+    phone?: string | null;
+    delivery_address: string;
+    delivery_location: DeliveryLocation;
+  },
+) {
+  return patchProfile(token, userId, {
+    ...(details.full_name ? { full_name: details.full_name } : {}),
+    ...(details.phone !== undefined ? { phone: details.phone } : {}),
+    delivery_address: details.delivery_address,
+    delivery_location: details.delivery_location,
+  });
 }
 
 export async function upsertProfile(

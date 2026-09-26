@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { MenuCheckoutItem } from "@/lib/menu-checkout";
 import type {
   BillingPeriod,
   DeliveryFrequency,
@@ -7,7 +8,8 @@ import type {
 
 const COOKIE = "eatrite_checkout";
 
-export type CheckoutIntent = {
+export type PlanCheckoutIntent = {
+  kind?: "plan";
   userId: string;
   planId: string;
   period: BillingPeriod;
@@ -17,6 +19,26 @@ export type CheckoutIntent = {
   amount: number;
   reference: string;
 };
+
+export type MenuCheckoutIntent = {
+  kind: "menu";
+  userId: string;
+  name: string;
+  phone: string;
+  address: string;
+  location: DeliveryLocation;
+  items: MenuCheckoutItem[];
+  amount: number;
+  reference: string;
+};
+
+export type CheckoutIntent = PlanCheckoutIntent | MenuCheckoutIntent;
+
+export function isMenuCheckoutIntent(
+  intent: CheckoutIntent | null,
+): intent is MenuCheckoutIntent {
+  return intent?.kind === "menu";
+}
 
 export async function setCheckoutIntent(intent: CheckoutIntent) {
   const store = await cookies();

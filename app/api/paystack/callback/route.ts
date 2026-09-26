@@ -22,6 +22,11 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${site}/account?error=${result.code}`);
     }
 
+    if ("orderId" in result && result.orderId) {
+      return NextResponse.redirect(
+        `${site}/account/orders/${result.orderId}?placed=1`,
+      );
+    }
     return NextResponse.redirect(`${site}/account?paid=1`);
   } catch {
     return NextResponse.redirect(`${site}/account?error=verify-failed`);

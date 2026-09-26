@@ -21,11 +21,19 @@ import {
 } from "@/lib/pricing";
 import { formatLagosDate, getPlanStartDateInput } from "@/lib/start-date";
 
-export function CheckoutForm({ plan }: { plan: MealPlan }) {
+export function CheckoutForm({
+  plan,
+  address: savedAddress = "",
+  location: savedLocation = "island",
+}: {
+  plan: MealPlan;
+  address?: string;
+  location?: DeliveryLocation;
+}) {
   const [period, setPeriod] = useState<BillingPeriod>("month");
   const [frequency, setFrequency] = useState<DeliveryFrequency>("3x-week");
-  const [location, setLocation] = useState<DeliveryLocation>("island");
-  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState<DeliveryLocation>(savedLocation);
+  const [address, setAddress] = useState(savedAddress);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   const [now, setNow] = useState(() => new Date());

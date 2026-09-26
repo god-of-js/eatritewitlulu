@@ -4,6 +4,8 @@ import { siteConfig } from "@/lib/config";
 const links = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
+  { href: "/menu", label: "Menu" },
+  { href: "/cart", label: "Cart" },
   { href: "/#plans", label: "Meal plans" },
   { href: "/login", label: "Login" },
 ];

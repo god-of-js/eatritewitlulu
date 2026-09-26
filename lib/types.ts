@@ -1,8 +1,48 @@
+export type Meal = {
+  id: string;
+  name: string;
+  image_url: string;
+  price: number;
+  description: string;
+  created_at: string;
+};
+
+export type OrderStatus = "pending" | "fulfilled";
+
+export type OrderItem = {
+  meal_id: string;
+  name: string;
+  image_url: string;
+  price: number;
+  quantity: number;
+};
+
+export type MenuOrder = {
+  id: string;
+  user_id: string;
+  customer_name: string;
+  customer_email: string | null;
+  customer_phone: string | null;
+  delivery_address: string;
+  delivery_location: "island" | "mainland" | null;
+  delivery_fee: number;
+  items: OrderItem[];
+  item_count: number;
+  total_amount: number;
+  status: OrderStatus;
+  payment_status: "pending" | "success" | "failed";
+  paystack_reference: string | null;
+  created_at: string;
+  fulfilled_at: string | null;
+};
+
 export type Profile = {
   id: string;
   full_name: string;
   phone: string | null;
   email: string | null;
+  delivery_address: string | null;
+  delivery_location: "island" | "mainland" | null;
   deleted_at: string | null;
 };
 

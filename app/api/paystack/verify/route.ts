@@ -22,7 +22,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      subscriptionId: result.subscriptionId,
+      kind: "kind" in result ? result.kind : "plan",
+      subscriptionId: "subscriptionId" in result ? result.subscriptionId : undefined,
+      orderId: "orderId" in result ? result.orderId : undefined,
     });
   } catch (error) {
     const message =

@@ -43,6 +43,8 @@ export function SignupForm() {
         full_name: name,
         phone,
         email,
+        delivery_address: null,
+        delivery_location: null,
         deleted_at: null,
       });
       await persistSession(credential.user);

@@ -53,6 +53,8 @@ export async function createAdminAccount(
     full_name: name,
     phone: null,
     email,
+    delivery_address: null,
+    delivery_location: null,
     deleted_at: null,
   });
 

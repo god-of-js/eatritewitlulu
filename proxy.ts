@@ -11,6 +11,7 @@ export async function proxy(request: NextRequest) {
   const isAdminLogin = pathname === "/admin/login";
   const isAdmin = pathname.startsWith("/admin");
   const isSubscribe = pathname.startsWith("/subscribe");
+  const isCheckout = pathname === "/checkout" || pathname.startsWith("/checkout/");
   const isAuthPage =
     pathname === "/login" ||
     pathname === "/signup" ||
@@ -37,7 +38,7 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  if ((isAccount || isSubscribe) && !user) {
+  if ((isAccount || isSubscribe || isCheckout) && !user) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     loginUrl.searchParams.set("next", `${pathname}${request.nextUrl.search}`);

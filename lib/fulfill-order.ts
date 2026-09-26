@@ -15,6 +15,7 @@ import {
 import {
   clearCheckoutIntent,
   getCheckoutIntent,
+  isMenuCheckoutIntent,
 } from "@/lib/checkout-intent";
 import { getSessionUser } from "@/lib/firebase/session";
 import {
@@ -22,14 +23,19 @@ import {
   createTransaction,
   getTransaction,
 } from "@/lib/firebase/firestore";
+import { createMenuOrder, getOrderByReference } from "@/lib/firebase/orders";
+import { quoteMenuCart } from "@/lib/menu-checkout";
 
 type PaystackMetadata = {
+  kind?: string;
   user_id?: string;
   plan_id?: string;
   billing_period?: string;
   delivery_frequency?: string;
   delivery_location?: string;
   delivery_address?: string;
+  customer_name?: string;
+  customer_phone?: string;
   custom_fields?: { variable_name?: string; value?: string }[];
 };
 
@@ -74,20 +80,132 @@ export async function fulfillPaidOrder(reference: string) {
   const intent = await getCheckoutIntent();
   const sameIntent = intent && intent.reference === payment.reference && intent.userId === user.id;
 
-  const planId = meta.plan_id || (sameIntent ? intent.planId : "");
-  const period = (meta.billing_period ||
-    (sameIntent ? intent.period : "")) as string;
-  const frequency = (meta.delivery_frequency ||
-    (sameIntent ? intent.frequency : "")) as string;
-  const location = (meta.delivery_location ||
-    (sameIntent ? intent.location : "")) as string;
-  const address = normalizeDeliveryAddress(
-    meta.delivery_address || (sameIntent ? intent.address : ""),
-  );
-
   if (meta.user_id && meta.user_id !== user.id) {
     return { ok: false as const, error: "This payment belongs to another account.", code: "payment-mismatch" };
   }
+
+  if (meta.kind === "menu" || (sameIntent && isMenuCheckoutIntent(intent))) {
+    return fulfillMenuOrder(user, payment, meta, sameIntent && isMenuCheckoutIntent(intent) ? intent : null);
+  }
+
+  return fulfillPlanOrder(user, payment, meta, sameIntent && !isMenuCheckoutIntent(intent) ? intent : null);
+}
+
+async function fulfillMenuOrder(
+  user: { id: string; email: string | null; token: string; name: string | null },
+  payment: { reference: string; amount: number; status: string; paid_at: string | null },
+  meta: PaystackMetadata,
+  intent: {
+    name: string;
+    phone: string;
+    address: string;
+    location: DeliveryLocation;
+    items: { mealId: string; quantity: number }[];
+    amount: number;
+  } | null,
+) {
+  const existingOrder = await getOrderByReference(user.token, payment.reference);
+  if (existingOrder) {
+    await clearCheckoutIntent();
+    return { ok: true as const, kind: "menu" as const, orderId: existingOrder.id };
+  }
+
+  const existingTx = await getTransaction(user.token, user.id, payment.reference);
+  if (existingTx) {
+    await clearCheckoutIntent();
+    return { ok: true as const, kind: "menu" as const, orderId: existingTx.subscription_id || "" };
+  }
+
+  const name = (meta.customer_name || intent?.name || user.name || "").trim();
+  const phone = (meta.customer_phone || intent?.phone || "").trim();
+  const address = normalizeDeliveryAddress(
+    meta.delivery_address || intent?.address || "",
+  );
+  const location = (meta.delivery_location || intent?.location || "") as string;
+  const items = intent?.items ?? [];
+
+  if (
+    !name ||
+    !items.length ||
+    !isDeliveryLocation(location) ||
+    !isDeliveryAddress(address)
+  ) {
+    return { ok: false as const, error: "We could not match this payment to a menu order.", code: "invalid-order" };
+  }
+
+  const quote = await quoteMenuCart(items, location);
+  if (!quote.items.length) {
+    return { ok: false as const, error: "Those meals are no longer on the menu.", code: "invalid-order" };
+  }
+  if (payment.amount !== quote.total * 100) {
+    return { ok: false as const, error: "Paid amount did not match the order total.", code: "amount-mismatch" };
+  }
+
+  const createdAt = new Date().toISOString();
+  try {
+    const order = await createMenuOrder(user.token, {
+      user_id: user.id,
+      customer_name: name,
+      customer_email: user.email,
+      customer_phone: phone || null,
+      delivery_address: address,
+      delivery_location: location,
+      delivery_fee: quote.deliveryFee,
+      items: quote.items,
+      item_count: quote.itemCount,
+      total_amount: quote.total,
+      status: "pending",
+      payment_status: "success",
+      paystack_reference: payment.reference,
+      created_at: createdAt,
+      fulfilled_at: null,
+    });
+
+    await createTransaction(user.token, user.id, payment.reference, {
+      user_id: user.id,
+      subscription_id: order.id,
+      amount: quote.total,
+      payment_status: "success",
+      paystack_reference: payment.reference,
+      paystack_status: payment.status,
+      plan_name: quote.items.map((item) => `${item.quantity} × ${item.name}`).join(", "),
+      paid_at: payment.paid_at,
+      created_at: createdAt,
+    });
+
+    await clearCheckoutIntent();
+    return { ok: true as const, kind: "menu" as const, orderId: order.id };
+  } catch (error) {
+    return {
+      ok: false as const,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Could not save your order.",
+      code: "order-save",
+    };
+  }
+}
+
+async function fulfillPlanOrder(
+  user: { id: string; token: string },
+  payment: { reference: string; amount: number; status: string; paid_at: string | null },
+  meta: PaystackMetadata,
+  intent: {
+    planId: string;
+    period: BillingPeriod;
+    frequency: DeliveryFrequency;
+    location: DeliveryLocation;
+    address: string;
+  } | null,
+) {
+  const planId = meta.plan_id || intent?.planId || "";
+  const period = (meta.billing_period || intent?.period || "") as string;
+  const frequency = (meta.delivery_frequency || intent?.frequency || "") as string;
+  const location = (meta.delivery_location || intent?.location || "") as string;
+  const address = normalizeDeliveryAddress(
+    meta.delivery_address || intent?.address || "",
+  );
 
   const plan = planId ? getPlanById(planId) : undefined;
   if (
@@ -114,7 +232,7 @@ export async function fulfillPaidOrder(reference: string) {
   const existing = await getTransaction(user.token, user.id, payment.reference);
   if (existing) {
     await clearCheckoutIntent();
-    return { ok: true as const, subscriptionId: existing.subscription_id };
+    return { ok: true as const, kind: "plan" as const, subscriptionId: existing.subscription_id };
   }
 
   const startDate = getPlanStartDateInput();
@@ -156,7 +274,7 @@ export async function fulfillPaidOrder(reference: string) {
     });
 
     await clearCheckoutIntent();
-    return { ok: true as const, subscriptionId: subscription.id };
+    return { ok: true as const, kind: "plan" as const, subscriptionId: subscription.id };
   } catch (error) {
     return {
       ok: false as const,

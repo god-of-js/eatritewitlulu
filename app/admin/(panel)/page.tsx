@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { loadAdminData } from "@/lib/firebase/admin-data";
+import { listAllOrders } from "@/lib/firebase/orders";
 import { requireAdmin } from "@/lib/firebase/require-admin";
 import { formatPlanPrice } from "@/lib/plans";
 import { displayStatus } from "@/lib/subscriptions";
@@ -12,13 +13,18 @@ export default async function AdminPage() {
   let activePlans = 0;
   let payments = 0;
   let revenue = 0;
+  let pendingOrders = 0;
   let recentPayments: Awaited<ReturnType<typeof loadAdminData>>["transactions"] =
     [];
   let recentPlans: Awaited<ReturnType<typeof loadAdminData>>["subscriptions"] =
     [];
 
   try {
-    const data = await loadAdminData(user.token);
+    const [data, orders] = await Promise.all([
+      loadAdminData(user.token),
+      listAllOrders(user.token).catch(() => []),
+    ]);
+    pendingOrders = orders.filter((item) => item.status === "pending").length;
     users = data.profiles.filter((item) => !item.deleted_at).length;
     const active = data.subscriptions.filter(
       (item) => displayStatus(item) === "active",
@@ -41,6 +47,7 @@ export default async function AdminPage() {
   const stats = [
     { label: "Customers", value: String(users), href: "/admin/users" },
     { label: "Active plans", value: String(activePlans), href: "/admin/plans" },
+    { label: "Pending orders", value: String(pendingOrders), href: "/admin/orders" },
     { label: "Successful payments", value: String(payments), href: "/admin/payments" },
     { label: "Revenue", value: formatPlanPrice(revenue), href: "/admin/payments" },
   ];
@@ -51,7 +58,7 @@ export default async function AdminPage() {
         Admin dashboard
       </h1>
       <p className="mt-2 text-sm text-ink/60">
-        Customers, active meal plans and payment history.
+        Customers, menu orders, meal plans and payment history.
       </p>
 
       {setupError ? (
@@ -63,7 +70,7 @@ export default async function AdminPage() {
         </p>
       ) : null}
 
-      <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {stats.map((item) => (
           <Link
             key={item.label}

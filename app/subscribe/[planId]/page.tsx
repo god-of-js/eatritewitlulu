@@ -4,7 +4,10 @@ import { Header } from "@/components/marketing/Header";
 import { Footer } from "@/components/marketing/Footer";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { Container } from "@/components/ui/Container";
+import { getProfile } from "@/lib/firebase/firestore";
+import { getSessionUser } from "@/lib/firebase/session";
 import { formatPlanPrice, getPlanById } from "@/lib/plans";
+import { isDeliveryLocation } from "@/lib/pricing";
 
 export default async function SubscribePage({
   params,
@@ -14,6 +17,10 @@ export default async function SubscribePage({
   const { planId } = await params;
   const plan = getPlanById(planId);
   if (!plan || !plan.active) notFound();
+  const user = await getSessionUser();
+  const profile = user
+    ? await getProfile(user.token, user.id).catch(() => null)
+    : null;
 
   return (
     <>
@@ -35,7 +42,15 @@ export default async function SubscribePage({
             Paystack.
           </p>
           <div className="mt-10">
-            <CheckoutForm plan={plan} />
+            <CheckoutForm
+              plan={plan}
+              address={profile?.delivery_address || ""}
+              location={
+                profile?.delivery_location && isDeliveryLocation(profile.delivery_location)
+                  ? profile.delivery_location
+                  : "island"
+              }
+            />
           </div>
         </Container>
       </main>

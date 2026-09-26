@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CartLink } from "@/components/cart/CartLink";
 import { Logo } from "@/components/ui/Logo";
 import { buttonClass } from "@/components/ui/ButtonLink";
 import { onAuthStateChanged } from "firebase/auth";
@@ -9,6 +10,7 @@ import { getFirebaseAuth } from "@/lib/firebase/client";
 const nav = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
+  { href: "/menu", label: "Menu" },
   { href: "/#plans", label: "Meal Plans" },
 ];
 
@@ -75,7 +77,8 @@ export function Header({ variant = "overlay" }: HeaderProps) {
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-5 lg:flex">
+          <CartLink className="cursor-pointer text-sm text-white/75 transition-colors hover:text-white" />
           <a href={accountHref} className={buttonClass("primary", "min-h-11 px-5")}>
             {accountLabel}
           </a>
@@ -126,6 +129,9 @@ export function Header({ variant = "overlay" }: HeaderProps) {
               </a>
             ))}
           </nav>
+          <CartLink
+            className="mt-2 rounded-xl px-3 py-3 text-base text-white/85"
+          />
           <a
             href={accountHref}
             className={buttonClass("primary", "mt-4 w-full")}

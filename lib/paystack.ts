@@ -1,9 +1,4 @@
 import { getSiteUrl } from "@/lib/config";
-import type {
-  BillingPeriod,
-  DeliveryFrequency,
-  DeliveryLocation,
-} from "@/lib/pricing";
 
 const PAYSTACK_BASE = "https://api.paystack.co";
 
@@ -19,19 +14,7 @@ export type PaystackInitializeInput = {
   email: string;
   amountNaira: number;
   reference?: string;
-  metadata: {
-    user_id: string;
-    plan_id: string;
-    billing_period: BillingPeriod;
-    delivery_frequency: DeliveryFrequency;
-    delivery_location: DeliveryLocation;
-    delivery_address: string;
-    custom_fields: {
-      display_name: string;
-      variable_name: string;
-      value: string;
-    }[];
-  };
+  metadata: Record<string, unknown>;
 };
 
 export async function initializePaystackTransaction(

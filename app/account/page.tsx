@@ -20,6 +20,7 @@ const PAYMENT_ERRORS: Record<string, string> = {
   "invalid-order": "We could not match this payment to a meal plan.",
   "amount-mismatch": "The amount paid did not match the order total.",
   "subscription-save": "Payment went through, but we could not save your plan.",
+  "order-save": "Payment went through, but we could not save your menu order.",
   "transaction-save": "Payment went through, but the transaction record could not be saved.",
   "verify-failed": "We could not verify this payment with Paystack.",
 };

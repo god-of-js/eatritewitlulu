@@ -13,6 +13,8 @@ const links = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/plans", label: "Plans" },
+  { href: "/admin/menu", label: "Menu" },
+  { href: "/admin/orders", label: "Orders" },
   { href: "/admin/payments", label: "Payments" },
   { href: "/admin/admins", label: "Admins" },
 ];

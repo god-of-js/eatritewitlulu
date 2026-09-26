@@ -12,6 +12,7 @@ import { persistSession } from "@/lib/firebase/persist-session";
 const links = [
   { href: "/account", label: "Overview" },
   { href: "/account/plans", label: "Meal plans" },
+  { href: "/account/orders", label: "Orders" },
   { href: "/account/transactions", label: "Transactions" },
   { href: "/account/profile", label: "Profile" },
   { href: "/account/settings", label: "Settings" },
