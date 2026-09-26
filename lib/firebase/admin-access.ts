@@ -41,7 +41,10 @@ function uniqueEmails(emails: (string | null | undefined)[]) {
   ];
 }
 
-export async function saveAdminEmails(token: string, emails: string[]) {
+export async function saveAdminEmails(
+  token: string,
+  emails: (string | null | undefined)[],
+) {
   const response = await fetch(adminsDocUrl(), {
     method: "PATCH",
     headers: {

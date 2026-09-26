@@ -17,9 +17,15 @@ import { initializePaystackTransaction } from "@/lib/paystack";
 export async function POST(request: Request) {
   const user = await getSessionUser();
 
-  if (!user?.email) {
+  if (!user || !user.email) {
     return NextResponse.json({ error: "Please log in to continue." }, { status: 401 });
   }
+
+  const customer = {
+    id: user.id,
+    email: user.email,
+    token: user.token,
+  };
 
   const publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY;
   if (!publicKey) {
@@ -43,9 +49,9 @@ export async function POST(request: Request) {
 
   try {
     if (body.kind === "menu") {
-      return await initializeMenuPayment(user, publicKey, body);
+      return await initializeMenuPayment(customer, publicKey, body);
     }
-    return await initializePlanPayment(user, publicKey, body);
+    return await initializePlanPayment(customer, publicKey, body);
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unable to start payment.";
