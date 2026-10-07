@@ -5,14 +5,14 @@ export const faqs = [
       "Choose a plan on the website, create an account or log in, select how often you want deliveries and whether you are on the Island or Mainland, then pay securely with Paystack. Your plan appears in your dashboard as soon as payment is confirmed.",
   },
   {
-    question: "What is the difference between Standard and High-Protein?",
+    question: "What is the difference between Sculpt and High-Protein?",
     answer:
-      "Standard plans are for convenient, balanced everyday eating. High-Protein plans are designed for fitness-focused customers who want more protein for training, recovery and body composition.",
+      "Sculpt plans are for convenient, balanced everyday eating. High-Protein plans are designed for fitness-focused customers who want more protein for training, recovery and body composition.",
   },
   {
     question: "How are delivery fees calculated?",
     answer:
-      "Delivery is ₦3,000 per drop on the Island and ₦5,000 per drop on the Mainland. The number of deliveries depends on your plan length and whether you choose Daily, 3x per week or 1x per week. The fee is added to your plan price before you pay.",
+      "Delivery is ₦3,500 per drop on the Island and ₦6,000 per drop on the Mainland. The number of deliveries depends on your plan length and whether you choose Daily, 3x per week or 1x per week. The fee is added to your plan price before you pay.",
   },
   {
     question: "Can I choose how often meals are delivered?",

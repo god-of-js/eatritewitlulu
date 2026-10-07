@@ -28,8 +28,8 @@ export type PlanCategory = {
 export const planCategories: PlanCategory[] = [
   {
     id: "standard",
-    name: "Standard Meal Plans",
-    eyebrow: "Standard",
+    name: "Sculpt Meal Plans",
+    eyebrow: "Sculpt",
     description:
       "Designed for people who want to eat healthy and feel their best. Properly portioned meals that make healthy eating simple, convenient and sustainable.",
     highlights: [
@@ -59,7 +59,7 @@ export const planCategories: PlanCategory[] = [
 export const mealPlans: MealPlan[] = [
   {
     id: "standard-all-inclusive",
-    name: "Standard All Inclusive Plan",
+    name: "Sculpt All Inclusive Plan",
     shortName: "All Inclusive",
     category: "standard",
     monthlyPrice: 1_090_000,
@@ -75,7 +75,7 @@ export const mealPlans: MealPlan[] = [
   },
   {
     id: "standard-weekday",
-    name: "Standard Weekday Plan",
+    name: "Sculpt Weekday Plan",
     shortName: "Weekday",
     category: "standard",
     monthlyPrice: 779_000,
@@ -91,7 +91,7 @@ export const mealPlans: MealPlan[] = [
   },
   {
     id: "standard-lunch-extra-1",
-    name: "Standard Lunch Extra 1 Plan",
+    name: "Sculpt Lunch Extra 1 Plan",
     shortName: "Lunch Extra 1",
     category: "standard",
     monthlyPrice: 723_000,
@@ -107,7 +107,7 @@ export const mealPlans: MealPlan[] = [
   },
   {
     id: "standard-lunch-extra-2",
-    name: "Standard Lunch Extra 2 Plan",
+    name: "Sculpt Lunch Extra 2 Plan",
     shortName: "Lunch Extra 2",
     category: "standard",
     monthlyPrice: 516_000,
@@ -123,7 +123,7 @@ export const mealPlans: MealPlan[] = [
   },
   {
     id: "standard-omad-1",
-    name: "Standard OMAD 1 Plan",
+    name: "Sculpt OMAD 1 Plan",
     shortName: "OMAD 1",
     category: "standard",
     monthlyPrice: 361_000,
@@ -139,7 +139,7 @@ export const mealPlans: MealPlan[] = [
   },
   {
     id: "standard-omad-2",
-    name: "Standard OMAD 2 Plan",
+    name: "Sculpt OMAD 2 Plan",
     shortName: "OMAD 2",
     category: "standard",
     monthlyPrice: 258_000,

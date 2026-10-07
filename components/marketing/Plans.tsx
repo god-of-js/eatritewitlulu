@@ -24,7 +24,7 @@ export function Plans() {
             Choose the Plan That Works for You
           </h2>
           <p className="mt-4 text-base leading-relaxed text-ink/65">
-            Start with Standard or High-Protein, then subscribe for a week or a
+            Start with Sculpt or High-Protein, then subscribe for a week or a
             month and pay directly on the website.
           </p>
         </div>

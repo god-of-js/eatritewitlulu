@@ -16,7 +16,7 @@ export function getWhatsAppUrl(message: string) {
 }
 
 const categoryLabel = {
-  standard: "Standard",
+  standard: "Sculpt",
   "high-protein": "High-Protein",
 } as const;
 

@@ -24,12 +24,12 @@ export const deliveryLocations = [
   {
     id: "island",
     label: "Island",
-    price: 3000,
+    price: 3500,
   },
   {
     id: "mainland",
     label: "Mainland",
-    price: 5000,
+    price: 6000,
   },
 ] as const;
 

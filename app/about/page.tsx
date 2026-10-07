@@ -8,7 +8,7 @@ import { aboutContent } from "@/lib/about";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Learn how EatriteWithLulu started, what we aim to achieve, and answers to common questions about meal plans and delivery.",
+    "EatriteWithLulu was created to make healthy eating simple, enjoyable and sustainable.",
 };
 
 export default function AboutPage() {
@@ -24,9 +24,11 @@ export default function AboutPage() {
             <h1 className="mt-3 max-w-3xl font-display text-4xl leading-tight font-medium tracking-tight sm:text-5xl">
               {aboutContent.heroTitle}
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink/70 sm:text-lg">
-              {aboutContent.heroCopy}
-            </p>
+            <div className="mt-5 max-w-2xl space-y-4 text-base leading-relaxed text-ink/70 sm:text-lg">
+              {aboutContent.heroCopy.map((paragraph) => (
+                <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+              ))}
+            </div>
           </Container>
         </section>
 
